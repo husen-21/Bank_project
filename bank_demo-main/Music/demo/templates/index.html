@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block public_content %}
+<div class="login-page">
+  <section class="login-visual">
+    <a class="brand" href="{{ url_for('index') }}"><span class="brand-mark">N</span> nexa<span style="font-weight:500">bank</span></a>
+    <div class="eyebrow" style="color:#b8c8ff">BANKING, REIMAGINED</div>
+    <h1>Your money.<br>Your future.<br>Your control.</h1>
+    <p>A modern banking dashboard concept built with Python and Flask. Explore deposits, withdrawals, loans and security in one place.</p>
+    <div style="margin-top:35px;font-size:12px;color:#d4ddff">✦ &nbsp; Simple. Clear. In control.</div>
+  </section>
+  <section class="login-form-side">
+    <div class="login-form">
+      <a class="brand brand-light" href="{{ url_for('index') }}"><span class="brand-mark">N</span> nexa<span style="font-weight:500">bank</span></a>
+      <div class="eyebrow">WELCOME TO NEXABANK</div>
+      <h2>Banking made simple.</h2>
+      <p>Create a demo account to explore your personal banking dashboard.</p>
+      <a class="btn btn-block" href="{{ url_for('create_account') }}">Create a demo account <span>→</span></a>
+      <div style="text-align:center;margin:20px 0;color:#a0a8b8;font-size:11px">NO REAL MONEY · EDUCATIONAL DEMO</div>
+      <div class="info-box"><strong>What you can do</strong><br>Track your balance, make demo deposits and withdrawals, estimate loan EMIs, view transaction history and manage demo locker security.</div>
+      <div class="login-footer">This project stores data temporarily in memory. Do not enter real banking credentials or use it for real financial transactions.</div>
+    </div>
+  </section>
+</div>
+{% endblock %}

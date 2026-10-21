@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% set title = "Overview" %}
+{% block content %}
+<div class="welcome">
+  <div><div class="eyebrow">YOUR FINANCIAL OVERVIEW</div><h1>Good day, {{ account.name.split()[0] }} 👋</h1><p>Here’s what’s happening with your demo account today.</p></div>
+  <div class="date-pill">◷ &nbsp; {{ now if now else "Your banking dashboard" }}</div>
+</div>
+<div class="grid stats">
+  <div class="stat-card"><div class="stat-top"><span>Total available balance</span><span class="stat-icon">₹</span></div><div class="stat-value">₹{{ "{:,.2f}".format(account.balance) }}</div><div class="stat-foot"><strong>●</strong> Available to use in this demo</div></div>
+  <div class="stat-card"><div class="stat-top"><span>Loan applications</span><span class="stat-icon">▣</span></div><div class="stat-value">{{ account.loans|length }}</div><div class="stat-foot">Submitted applications</div></div>
+  <div class="stat-card"><div class="stat-top"><span>Transactions</span><span class="stat-icon">↔</span></div><div class="stat-value">{{ account.transactions|length }}</div><div class="stat-foot">Recent account activities</div></div>
+</div>
+<div class="grid dashboard-grid">
+  <div>
+    <div class="account-card">
+      <div class="card-top"><span class="card-label">NEXABANK · DEMO ACCOUNT</span><span class="card-chip"></span></div>
+      <div class="card-balance">₹{{ "{:,.2f}".format(account.balance) }}</div>
+      <div class="card-bottom"><div><div class="card-label">ACCOUNT HOLDER</div><div class="card-name" style="margin-top:5px">{{ account.name|upper }}</div></div><div><div class="card-label">ACCOUNT NUMBER</div><div class="card-no">{{ session.account_number }}</div></div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><h2>Quick actions</h2><span class="text-link">Manage your money</span></div>
+      <div class="quick-actions">
+        <a class="quick-action" href="{{ url_for('transaction', action='deposit') }}"><div class="quick-icon">↙</div><span>Deposit</span></a>
+        <a class="quick-action" href="{{ url_for('transaction', action='withdraw') }}"><div class="quick-icon">↗</div><span>Withdraw</span></a>
+        <a class="quick-action" href="{{ url_for('loans') }}"><div class="quick-icon">▣</div><span>Apply for loan</span></a>
+        <a class="quick-action" href="{{ url_for('locker') }}"><div class="quick-icon">▦</div><span>Locker</span></a>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><h2>Recent transactions</h2><a class="text-link" href="{{ url_for('transactions') }}">View all →</a></div>
+      {% if account.transactions %}
+      <div class="table-wrap"><table><thead><tr><th>Activity</th><th>Date</th><th>Amount</th><th>Balance</th></tr></thead><tbody>
+      {% for txn in account.transactions[:5] %}
+      <tr><td><div class="txn-name">{{ txn.type }}</div>{% if txn.note %}<div class="txn-date">{{ txn.note }}</div>{% endif %}</td><td>{{ txn.date }}</td><td class="{{ 'amount-in' if txn.type == 'Deposit' else 'amount-out' }}">{% if txn.type == 'Deposit' %}+{% elif txn.type == 'Withdrawal' %}−{% endif %}₹{{ "{:,.2f}".format(txn.amount) }}</td><td>₹{{ "{:,.2f}".format(txn.balance) }}</td></tr>
+      {% endfor %}</tbody></table></div>
+      {% else %}<div class="empty">Your transactions will appear here.</div>{% endif %}
+    </div>
+  </div>
+  <div>
+    <div class="panel">
+      <div class="panel-head"><h2>Account details</h2><span class="stat-icon">♙</span></div>
+      <div class="feature-list">
+        <div class="feature"><div class="feature-icon">✓</div><div><strong>Demo account active</strong><p>Account #{{ session.account_number }} is ready to explore.</p></div></div>
+        <div class="feature"><div class="feature-icon">⌑</div><div><strong>Customer security</strong><p>Update your demo PIN from the security page.</p><a class="text-link" href="{{ url_for('security') }}">Manage security →</a></div></div>
+        <div class="feature"><div class="feature-icon">▦</div><div><strong>Private locker</strong><p>{% if account.locker_pin %}A locker PIN has been configured.{% else %}Set up a separate PIN for your demo locker.{% endif %}</p><a class="text-link" href="{{ url_for('locker') }}">Open locker →</a></div></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><h2>Loan snapshot</h2><span class="stat-icon">₹</span></div>
+      <div class="stat-value" style="font-size:24px">₹{{ "{:,.2f}".format(total_loans) }}</div>
+      <div class="stat-foot">Total amount requested across demo loan applications</div>
+      <div style="margin-top:20px"><a class="btn btn-block" href="{{ url_for('loans') }}">Explore loan options →</a></div>
+    </div>
+    <div class="info-box"><strong>Demo disclaimer</strong><br>This is an educational project. Balances and loan applications are simulated and are not connected to any bank.</div>
+  </div>
+</div>
+{% endblock %}

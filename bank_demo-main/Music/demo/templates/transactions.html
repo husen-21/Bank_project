@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% set title = "Transactions" %}
+{% block content %}
+<div class="page-heading"><div class="eyebrow">ACCOUNT ACTIVITY</div><h1 class="page-title">Transaction history</h1><p class="subtitle">Review the latest activity recorded in your demo account.</p></div>
+<div class="panel"><div class="panel-head"><h2>All recent activity</h2><span class="status success">{{ account.transactions|length }} records</span></div>
+{% if account.transactions %}
+<div class="table-wrap"><table><thead><tr><th>Transaction</th><th>Date & time</th><th>Amount</th><th>Balance after</th><th>Type</th></tr></thead><tbody>
+{% for txn in account.transactions %}
+<tr><td><div class="txn-name">{{ txn.type }}</div>{% if txn.note %}<div class="txn-date">{{ txn.note }}</div>{% endif %}</td><td>{{ txn.date }}</td><td class="{{ 'amount-in' if txn.type == 'Deposit' else 'amount-out' }}"> {% if txn.type == 'Deposit' %}+{% elif txn.type == 'Withdrawal' %}−{% endif %}₹{{ "{:,.2f}".format(txn.amount) }}</td><td>₹{{ "{:,.2f}".format(txn.balance) }}</td><td><span class="status {{ 'success' if txn.type == 'Deposit' else '' }}">{{ txn.type }}</span></td></tr>
+{% endfor %}</tbody></table></div>
+{% else %}<div class="empty">No transactions yet. Make your first deposit to get started.</div>{% endif %}
+</div>
+{% endblock %}

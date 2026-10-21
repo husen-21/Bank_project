@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% set title = "Security" %}
+{% block content %}
+<div class="page-heading"><div class="eyebrow">KEEP YOUR PROFILE SAFE</div><h1 class="page-title">Customer security</h1><p class="subtitle">Update the PIN used to verify demo banking transactions.</p></div>
+<div class="two-col">
+<div class="form-card"><div class="panel-head"><h2>Change account PIN</h2><span class="stat-icon">⌑</span></div>
+<form method="post">
+<div class="field"><label>Current PIN</label><input name="old_pin" type="password" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" required placeholder="Current 4-digit PIN"></div>
+<div class="field"><label>New PIN</label><input name="new_pin" type="password" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" required placeholder="New 4-digit PIN"></div>
+<div class="field"><label>Confirm new PIN</label><input name="confirm_pin" type="password" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" required placeholder="Re-enter new PIN"></div>
+<button class="btn btn-block" type="submit">Update PIN →</button>
+</form></div>
+<div class="panel"><div class="panel-head"><h2>Profile details</h2><span class="stat-icon">♙</span></div>
+<div class="feature-list">
+<div class="feature"><div class="feature-icon">♙</div><div><strong>Account holder</strong><p>{{ account.name }}</p></div></div>
+<div class="feature"><div class="feature-icon">▤</div><div><strong>Demo account number</strong><p>{{ session.account_number }}</p></div></div>
+<div class="feature"><div class="feature-icon">✓</div><div><strong>PIN format</strong><p>Four numeric digits are required.</p></div></div>
+</div>
+<div class="info-box" style="margin-top:22px"><strong>Security note</strong><br>This demo keeps PINs in server memory as plain text. It is not suitable for real users or production deployment.</div>
+</div>
+</div>
+{% endblock %}

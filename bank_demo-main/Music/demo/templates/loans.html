@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% set title = "Loans" %}
+{% block content %}
+<div class="page-heading"><div class="eyebrow">BORROWING MADE CLEAR</div><h1 class="page-title">Loan center</h1><p class="subtitle">Explore loan options and calculate an illustrative monthly EMI.</p></div>
+<div class="grid stats">
+{% for name, rate in loan_rates.items() %}
+<div class="stat-card"><div class="stat-top"><span>{{ name }}</span><span class="stat-icon">₹</span></div><div class="stat-value">{{ "%.1f"|format(rate) }}%</div><div class="stat-foot">Illustrative annual interest rate</div></div>
+{% endfor %}
+</div>
+<div class="two-col">
+<div class="form-card"><div class="panel-head"><h2>Apply for a demo loan</h2><span class="stat-icon">▣</span></div>
+<form method="post">
+<div class="field"><label>Loan type</label><select name="loan_type" required><option value="">Select loan type</option>{% for name in loan_rates %}<option value="{{ name }}">{{ name }}</option>{% endfor %}</select></div>
+<div class="form-grid"><div class="field"><label>Requested amount (₹)</label><input type="number" name="amount" min="1" step="0.01" placeholder="e.g. 500000" required></div><div class="field"><label>Repayment period (years)</label><select name="years" required>{% for y in range(1,31) %}<option value="{{ y }}" {{ 'selected' if y == 5 else '' }}>{{ y }} year{{ '' if y == 1 else 's' }}</option>{% endfor %}</select></div></div>
+<div class="field"><label>Account PIN</label><input name="pin" type="password" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" placeholder="Enter 4-digit PIN" required></div>
+<button class="btn btn-block" type="submit">Submit loan application →</button>
+</form><div class="small-note">EMI is estimated using a fixed monthly rate. Actual bank rates, fees, eligibility and approval terms may differ.</div>
+</div>
+<div class="panel"><div class="panel-head"><h2>Your applications</h2><span class="stat-icon">▤</span></div>
+{% if account.loans %}
+<div class="feature-list">{% for loan in account.loans %}
+<div class="feature"><div class="feature-icon">₹</div><div style="flex:1"><strong>{{ loan.type }}</strong><p>Requested: ₹{{ "{:,.2f}".format(loan.amount) }} · {{ loan.years }} years</p><p>Estimated EMI: <strong>₹{{ "{:,.2f}".format(loan.emi) }}/month</strong></p><div style="margin-top:8px"><span class="status pending">{{ loan.status }}</span></div></div></div>
+{% endfor %}</div>
+{% else %}<div class="empty">You haven't submitted any loan applications.</div>{% endif %}
+</div>
+</div>
+{% endblock %}

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ title or "NexaBank" }} · NexaBank</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+{% if account %}
+<div class="shell">
+  <aside class="sidebar">
+    <a class="brand" href="{{ url_for('dashboard') }}"><span class="brand-mark">N</span> nexa<span style="font-weight:500">bank</span></a>
+    <div class="nav-label">Workspace</div>
+    <nav class="nav">
+      <a class="{{ 'active' if request.endpoint == 'dashboard' else '' }}" href="{{ url_for('dashboard') }}"><span class="nav-icon">⌂</span> Overview</a>
+      <a class="{{ 'active' if request.endpoint == 'transaction' and request.view_args.action == 'deposit' else '' }}" href="{{ url_for('transaction', action='deposit') }}"><span class="nav-icon">↙</span> Deposit</a>
+      <a class="{{ 'active' if request.endpoint == 'transaction' and request.view_args.action == 'withdraw' else '' }}" href="{{ url_for('transaction', action='withdraw') }}"><span class="nav-icon">↗</span> Withdraw</a>
+      <a class="{{ 'active' if request.endpoint == 'transactions' else '' }}" href="{{ url_for('transactions') }}"><span class="nav-icon">▤</span> Transactions</a>
+      <a class="{{ 'active' if request.endpoint == 'loans' else '' }}" href="{{ url_for('loans') }}"><span class="nav-icon">▣</span> Loans</a>
+      <a class="{{ 'active' if request.endpoint == 'security' else '' }}" href="{{ url_for('security') }}"><span class="nav-icon">♙</span> Security</a>
+      <a class="{{ 'active' if request.endpoint == 'locker' else '' }}" href="{{ url_for('locker') }}"><span class="nav-icon">▦</span> Locker</a>
+    </nav>
+    <div class="sidebar-bottom">NexaBank Demo<br>Secure banking, made simple.</div>
+  </aside>
+  <main class="main">
+    <header class="topbar">
+      <div class="crumb">Workspace <span style="padding:0 8px;color:#c4cada">/</span> <strong>{{ title or "Overview" }}</strong></div>
+      <div class="user-chip"><div class="avatar">{{ account.name[:1]|upper }}</div><div><div class="user-name">{{ account.name }}</div><div class="user-sub">Account · {{ session.account_number }}</div></div><a class="text-link" style="margin-left:10px" href="{{ url_for('logout') }}">Sign out</a></div>
+    </header>
+    <section class="content">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}{% for category, message in messages %}<div class="alert {{ category }}">{{ message }}</div>{% endfor %}{% endif %}
+      {% endwith %}
+      {% block content %}{% endblock %}
+    </section>
+  </main>
+</div>
+{% else %}
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}<div style="position:fixed;top:20px;right:20px;z-index:10;max-width:360px">{% for category, message in messages %}<div class="alert {{ category }}">{{ message }}</div>{% endfor %}</div>{% endif %}
+  {% endwith %}
+  {% block public_content %}{% endblock %}
+{% endif %}
+<script>
+document.querySelectorAll('form[data-confirm]').forEach(form => form.addEventListener('submit', e => {
+  if (!confirm(form.dataset.confirm)) e.preventDefault();
+}));
+</script>
+</body>
+</html>

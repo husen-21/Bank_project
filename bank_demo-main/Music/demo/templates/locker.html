@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% set title = "Locker" %}
+{% block content %}
+<div class="page-heading"><div class="eyebrow">PERSONAL VAULT</div><h1 class="page-title">Locker security</h1><p class="subtitle">Configure a separate PIN and unlock your simulated digital locker.</p></div>
+<div class="two-col">
+<div class="form-card" style="text-align:center">
+<div style="width:88px;height:88px;margin:0 auto 20px;border-radius:26px;background:{{ '#e5f8f0' if unlocked else '#edf1ff' }};color:{{ '#0b9b73' if unlocked else '#315cf5' }};display:grid;place-items:center;font-size:40px">{{ '▣' if unlocked else '▦' }}</div>
+<h2 style="font:800 22px Manrope,sans-serif;margin:0 0 8px">{{ 'Locker unlocked' if unlocked else 'Your private locker' }}</h2>
+<p class="subtitle" style="margin-bottom:25px">{{ 'Access granted for this demo session.' if unlocked else 'Your locker is protected by a separate 4-digit PIN.' }}</p>
+{% if unlocked %}
+<form method="post"><input type="hidden" name="action" value="lock"><button class="btn btn-secondary btn-block" type="submit">Lock locker</button></form>
+{% elif not account.locker_pin %}
+<form method="post"><input type="hidden" name="action" value="setup">
+<div class="field" style="text-align:left"><label>Account PIN</label><input type="password" name="account_pin" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" required placeholder="Verify account PIN"></div>
+<div class="field" style="text-align:left"><label>Create locker PIN</label><input type="password" name="locker_pin" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" required placeholder="Choose a separate PIN"></div>
+<div class="field" style="text-align:left"><label>Confirm locker PIN</label><input type="password" name="confirm_pin" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" required placeholder="Repeat locker PIN"></div>
+<button class="btn btn-block" type="submit">Set up locker →</button></form>
+{% else %}
+<form method="post"><input type="hidden" name="action" value="unlock">
+<div class="field" style="text-align:left"><label>Locker PIN</label><input type="password" name="locker_pin" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" required placeholder="Enter locker PIN"></div>
+<button class="btn btn-block" type="submit">Unlock locker →</button></form>
+{% endif %}
+</div>
+<div class="panel"><div class="panel-head"><h2>Locker status</h2><span class="stat-icon">⌑</span></div>
+<div class="feature-list">
+<div class="feature"><div class="feature-icon">✓</div><div><strong>Separate PIN</strong><p>Your locker uses a different PIN from your account PIN.</p></div></div>
+<div class="feature"><div class="feature-icon">◉</div><div><strong>Session access</strong><p>Unlock status is held in the demo session and can be cleared by locking or signing out.</p></div></div>
+<div class="feature"><div class="feature-icon">!</div><div><strong>Educational simulation</strong><p>This locker does not store documents or valuables and is not a real security vault.</p></div></div>
+</div></div>
+</div>
+{% endblock %}
